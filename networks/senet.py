@@ -86,8 +86,14 @@ class SENet(nn.Module):
         self.layer2 = self._make_layer(block, 128, layers[1])
         self.layer3 = self._make_layer(block, 256, layers[2])
         self.layer4 = self._make_layer(block, 512, layers[3])
-        self.avgpool = nn.AvgPool2d(7, stride=1)
-
+        
+        self.layer5 = nn.Sequential(
+                      nn.Conv2d(512, 128, kernel_size=1, stride=1),
+                      nn.Conv2d(128, 32, kernel_size=1, stride=1),
+                      nn.Conv2d(32, 8, kernel_size=1, stride=1),
+                      nn.Conv2d(8, 1, kernel_size=1, stride=1))
+        
+        
 
         for m in self.modules():
             if isinstance(m, nn.Conv2d):
@@ -118,30 +124,13 @@ class SENet(nn.Module):
         x = self.layer2(x)
         x = self.layer3(x)
         x = self.layer4(x)
+        
+        x = self.layer5(x)
 
-        x = self.avgpool(x)
-        x = x.view(x.size(0), -1)
-        x = self.fc(x)
 
         return x
 
 
-def se_resnet_18(pretrained=False, **kwargs):
-    """Constructs a ResNet-18 model.
-    Args:
-        pretrained (bool): If True, returns a model pre-trained on ImageNet
-    """
-    model = SENet(BasicBlock, [2, 2, 2, 2], **kwargs)
-    return model
-
-
-def se_resnet_34(pretrained=False, **kwargs):
-    """Constructs a ResNet-34 model.
-    Args:
-        pretrained (bool): If True, returns a model pre-trained on ImageNet
-    """
-    model = SENet(BasicBlock, [3, 4, 6, 3], **kwargs)
-    return model
 
 
 def se_resnet_50(pretrained=False, **kwargs):
@@ -169,4 +158,4 @@ def se_resnet_152(pretrained=False, **kwargs):
     """
     model = SENet(Bottleneck, [3, 8, 36, 3], **kwargs)
     return model
-© 2019 GitHub, Inc.
+
