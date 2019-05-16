@@ -3,11 +3,11 @@ from .erfnet import ERFNet
 from .pspnet import PSPNet
 from .segnet import SegNet
 from .unet import UNet
-from .senet import SeNet
+from .senet import SENet
 from .utils import *
 
 net_dic = {'erfnet' : ERFNet, 'fcn8' : FCN8, 'fcn16' : FCN16, 
-                'fcn32' : FCN32, 'unet' : UNet, 'pspnet': PSPNet, 'segnet' : SegNet, 'senet' :SeNet}
+                'fcn32' : FCN32, 'unet' : UNet, 'pspnet': PSPNet, 'segnet' : SegNet, 'senet' :SENet}
                 
 
 def get_model(args):
