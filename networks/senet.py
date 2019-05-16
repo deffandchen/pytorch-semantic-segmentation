@@ -3,7 +3,7 @@ import math
 import torch.utils.model_zoo as model_zoo
 
 
-__all__ = ['SENet', 'se_resnet_18', 'se_resnet_34', 'se_resnet_50', 'se_resnet_101',
+__all__ = ['SENet', 'se_resnet_50', 'se_resnet_101',
            'se_resnet_152']
 
 def conv3x3(in_planes, out_planes, stride=1):
@@ -13,7 +13,6 @@ def conv3x3(in_planes, out_planes, stride=1):
 
 
 class Bottleneck(nn.Module):
-    expansion = 4
 
     def __init__(self, inplanes, planes, stride=1, downsample=None):
         super(Bottleneck, self).__init__()
@@ -92,9 +91,7 @@ class SENet(nn.Module):
                       nn.Conv2d(128, 32, kernel_size=1, stride=1),
                       nn.Conv2d(32, 8, kernel_size=1, stride=1),
                       nn.Conv2d(8, 1, kernel_size=1, stride=1))
-        
-        
-
+       
         for m in self.modules():
             if isinstance(m, nn.Conv2d):
                 n = m.kernel_size[0] * m.kernel_size[1] * m.out_channels
@@ -127,11 +124,7 @@ class SENet(nn.Module):
         
         x = self.layer5(x)
 
-
         return x
-
-
-
 
 def se_resnet_50(pretrained=False, **kwargs):
     """Constructs a ResNet-50 model.
@@ -158,4 +151,3 @@ def se_resnet_152(pretrained=False, **kwargs):
     """
     model = SENet(Bottleneck, [3, 8, 36, 3], **kwargs)
     return model
-
